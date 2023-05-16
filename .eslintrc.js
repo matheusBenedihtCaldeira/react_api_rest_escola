@@ -1,37 +1,42 @@
 module.exports = {
   env: {
     browser: true,
-    es2021: true
+    es2021: true,
   },
   extends: [
-    "plugin:react/recommended",
-    "airbnb",
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:prettier/recommended"
+    'plugin:react/recommended',
+    'airbnb',
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:prettier/recommended',
   ],
-  parser: "@babel/eslint-parser",
+  parser: '@babel/eslint-parser',
   parserOptions: {
     ecmaFeatures: {
-      jsx: true
+      jsx: true,
     },
     babelOptions: {
-      presets: ["@babel/preset-react"]
+      presets: ['@babel/preset-react'],
     },
-    ecmaVersion: "latest",
+    ecmaVersion: 'latest',
     requireConfigFile: false,
-    sourceType: "module"
+    sourceType: 'module',
   },
-  plugins: ["react", "prettier", "react-hooks"],
+  plugins: ['react', 'prettier', 'react-hooks'],
   rules: {
-    "prettier/prettier": ["error", {
-      "endOfLine":"auto"
-    }],
-    "react/jsx-filename-extension": 0,
-    "import/prefer-default-export": 0,
-    "react-hooks/rules-of-hooks": "error",
-    "react/react-in-jsx-scope": "off",
-    "react-hooks/exhaustive-deps": "warn",
-    "no-undef": "off"
-  }
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
+    'react/jsx-filename-extension': 0,
+    'import/prefer-default-export': 0,
+    'react-hooks/rules-of-hooks': 'error',
+    'react/react-in-jsx-scope': 'off',
+    'react-hooks/exhaustive-deps': 'warn',
+    'no-undef': 'off',
+    'jsx-a11y/anchor-is-valid': 'off',
+    'import/no-extraneous-dependencies': 'off',
+  },
 };

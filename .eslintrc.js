@@ -38,5 +38,6 @@ module.exports = {
     'no-undef': 'off',
     'jsx-a11y/anchor-is-valid': 'off',
     'import/no-extraneous-dependencies': 'off',
+    'default-param-last': 'off',
   },
 };

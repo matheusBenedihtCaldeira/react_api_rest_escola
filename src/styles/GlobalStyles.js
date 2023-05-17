@@ -27,7 +27,16 @@ export default createGlobalStyle`
     padding: 10px;
     border-radius: 4px;
     font-weight: 700;
+    transition: all 300ms;
+    font-family: sans-serif;
+    font-size: 15px;
   }
+
+  button:hover {
+    filter: brightness(75%);
+
+  }
+
   a{
     text-decoration: none;
     color: ${colors.primaryColor};

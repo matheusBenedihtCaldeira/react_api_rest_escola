@@ -6,12 +6,14 @@ export function loginRequest(payload) {
     payload,
   };
 }
+
 export function loginSuccess(payload) {
   return {
     type: types.LOGIN_SUCCESS,
     payload,
   };
 }
+
 export function loginFailure(payload) {
   return {
     type: types.LOGIN_FAILURE,

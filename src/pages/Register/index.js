@@ -1,9 +1,11 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-no-bind */
 import React, { useState } from 'react';
+
 import { toast } from 'react-toastify';
 import { isEmail } from 'validator';
 import { get } from 'lodash';
+import Loading from '../../components/Loading';
 import { Container } from '../../styles/GlobalStyles';
 import { Form } from './styled';
 import axios from '../../services/axios';
@@ -13,6 +15,7 @@ export default function Register() {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -32,6 +35,7 @@ export default function Register() {
     }
 
     if (formErrors) return;
+    setIsLoading(true);
 
     try {
       const response = await axios.post('/users/', {
@@ -40,14 +44,18 @@ export default function Register() {
         email,
       });
       toast.success('Cadastro realizado');
+      setIsLoading(false);
       history.push('/login');
     } catch (err) {
       const errors = get(err, 'response.data.errors', []);
       errors.map((error) => toast.error(error));
+      setIsLoading(false);
     }
   }
   return (
     <Container>
+      <Loading isLoading={isLoading} />
+
       <h1>Register</h1>
       <Form onSubmit={handleSubmit}>
         <label htmlFor="nome">

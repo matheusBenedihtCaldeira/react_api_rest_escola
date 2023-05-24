@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { get } from 'lodash';
 import PropTypes from 'prop-types';
 import { isEmail, isInt, isFloat } from 'validator';
 import { toast } from 'react-toastify';
 import { Container } from '../../styles/GlobalStyles';
 import { Form } from './styled';
+import Loading from '../../components/Loading';
+import axios from '../../services/axios';
+import history from '../../services/history';
 
 export default function Aluno({ match }) {
   const id = get(match, 'params.id', 0);
@@ -14,6 +17,34 @@ export default function Aluno({ match }) {
   const [idade, setIdade] = useState('');
   const [peso, setPeso] = useState('');
   const [altura, setAltura] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (!id) return;
+    async function getData() {
+      try {
+        setIsLoading(true);
+        const { data } = await axios.get(`/alunos/${id}`);
+        // eslint-disable-next-line no-unused-vars
+        const Foto = get(data, 'Fotos[0].url', '');
+        setNome(data.nome);
+        setSobrenome(data.sobrenome);
+        setEmail(data.email);
+        setIdade(data.idade);
+        setPeso(data.peso);
+        setAltura(data.altura);
+
+        setIsLoading(false);
+      } catch (err) {
+        setIsLoading(false);
+        const status = get(err, 'response.status', 0);
+        const errors = get(err, 'response.data.errors', []);
+        if (status === 400) errors.map((error) => toast.error(error));
+        history.push('/');
+      }
+    }
+    getData();
+  }, [id]);
   const handleSubmit = (e) => {
     e.preventDefault();
     let formErrors = false;
@@ -48,6 +79,7 @@ export default function Aluno({ match }) {
   };
   return (
     <Container>
+      <Loading isLoading={isLoading} />
       <h1>{id ? 'Editar aluno' : 'Novo Aluno'}</h1>
       <Form onSubmit={handleSubmit}>
         <input

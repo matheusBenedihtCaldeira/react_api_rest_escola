@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { get } from 'lodash';
 import PropTypes from 'prop-types';
+import { isEmail, isInt, isFloat } from 'validator';
+import { toast } from 'react-toastify';
 import { Container } from '../../styles/GlobalStyles';
 import { Form } from './styled';
 
@@ -14,6 +16,35 @@ export default function Aluno({ match }) {
   const [altura, setAltura] = useState('');
   const handleSubmit = (e) => {
     e.preventDefault();
+    let formErrors = false;
+
+    if (nome.length < 3 || nome.length > 255) {
+      toast.error('Nome precisa ter entre 3 e 255 caracteres.');
+      formErrors = true;
+    }
+    if (sobrenome.length < 3 || sobrenome.length > 255) {
+      toast.error('Sobrenome precisa ter entre 3 e 255 caracteres.');
+      formErrors = true;
+    }
+
+    if (!isEmail(email)) {
+      toast.error('E-mail invalido!');
+      formErrors = true;
+    }
+
+    if (!isInt(String(idade))) {
+      toast.error('Idade invalida!');
+      formErrors = true;
+    }
+    if (!isFloat(peso)) {
+      toast.error('Peso invalida!');
+      formErrors = true;
+    }
+    if (!isFloat(altura)) {
+      toast.error('Altura invalida!');
+      // eslint-disable-next-line no-unused-vars
+      formErrors = true;
+    }
   };
   return (
     <Container>

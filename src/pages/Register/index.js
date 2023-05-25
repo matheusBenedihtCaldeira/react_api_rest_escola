@@ -6,12 +6,13 @@ import { toast } from 'react-toastify';
 import { isEmail } from 'validator';
 
 import { useSelector, useDispatch } from 'react-redux';
+import PropTypes from 'prop-types';
 import Loading from '../../components/Loading';
 import { Container } from '../../styles/GlobalStyles';
 import { Form } from './styled';
 import * as actions from '../../store/modules/auth/actions';
 
-export default function Register() {
+export default function Register(props) {
   const id = useSelector((state) => state.auth.user.id);
   const nomeStored = useSelector((state) => state.auth.user.nome);
   const emailStored = useSelector((state) => state.auth.user.email);
@@ -20,6 +21,7 @@ export default function Register() {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { history } = props;
 
   React.useEffect(() => {
     if (!id) return;
@@ -46,7 +48,7 @@ export default function Register() {
 
     if (formErrors) return;
 
-    dispatch(actions.registerRequest({ nome, email, password, id }));
+    dispatch(actions.registerRequest({ nome, email, password, id, history }));
   }
   return (
     <Container>
@@ -89,3 +91,7 @@ export default function Register() {
     </Container>
   );
 }
+
+Register.propTypes = {
+  history: PropTypes.shape({}).isRequired,
+};

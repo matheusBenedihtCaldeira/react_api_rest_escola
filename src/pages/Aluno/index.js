@@ -3,10 +3,12 @@ import { get } from 'lodash';
 import PropTypes from 'prop-types';
 import { isEmail, isInt, isFloat } from 'validator';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
 import { Container } from '../../styles/GlobalStyles';
 import { Form } from './styled';
 import Loading from '../../components/Loading';
 import axios from '../../services/axios';
+import * as actions from '../../store/modules/auth/actions';
 import history from '../../services/history';
 
 export default function Aluno({ match }) {
@@ -18,6 +20,7 @@ export default function Aluno({ match }) {
   const [peso, setPeso] = useState('');
   const [altura, setAltura] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!id) return;
@@ -45,7 +48,7 @@ export default function Aluno({ match }) {
     }
     getData();
   }, [id]);
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let formErrors = false;
 
@@ -67,14 +70,52 @@ export default function Aluno({ match }) {
       toast.error('Idade invalida!');
       formErrors = true;
     }
-    if (!isFloat(peso)) {
+    if (!isFloat(String(peso))) {
       toast.error('Peso invalida!');
       formErrors = true;
     }
-    if (!isFloat(altura)) {
+    if (!isFloat(String(altura))) {
       toast.error('Altura invalida!');
       // eslint-disable-next-line no-unused-vars
       formErrors = true;
+    }
+    if (formErrors) return;
+
+    try {
+      setIsLoading(true);
+      if (id) {
+        await axios.put(`/alunos/${id}`, {
+          nome,
+          sobrenome,
+          email,
+          idade,
+          peso,
+          altura,
+        });
+        toast.success('Dados atualizados!');
+      } else {
+        await axios.post(`/alunos/`, {
+          nome,
+          sobrenome,
+          email,
+          idade,
+          peso,
+          altura,
+        });
+        toast.success('Aluno registrado');
+        history.push('/');
+      }
+      setIsLoading(false);
+    } catch (err) {
+      const status = get(err, 'response.status', 0);
+      const data = get(err, 'response.data', {});
+      const errors = get(data, 'errors', []);
+      if (errors.length > 0) {
+        errors.map((error) => toast.error(error));
+      } else {
+        toast.error('Erro');
+      }
+      if (status === 401) dispatch(actions.loginFailure());
     }
   };
   return (
